@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Update the machine
+      ansible.builtin.apt:
+        update_cache: true
+        name: cron
+
+    - name: Install postgresql
+      ansible.builtin.import_role:
+        name: mivek.postgresql

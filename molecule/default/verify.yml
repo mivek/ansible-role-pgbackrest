@@ -1,0 +1,93 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  check_mode: true
+  tasks:
+
+  - name: Check that directories exists [1/2]
+    ansible.builtin.file:
+      state: directory
+      owner: postgres
+      group: postgres
+      path: "{{ item }}"
+    loop:
+      - /etc/pgbackrest
+      - /var/lib/pgbackrest
+      - /var/log/pgbackrest
+    register: __stat_directories
+
+  - name: Check that directories exists [2/2]
+    ansible.builtin.assert:
+      that:
+        - __stat_directories.changed is false
+
+  - name: Check that users exists [1/2]
+    ansible.builtin.user:
+      name: postgres
+      group: postgres
+      home: /var/lib/postgresql
+      state: present
+    register: __stat_user
+
+  - name: Check that users exists [2/2]
+    ansible.builtin.assert:
+      that:
+        - __stat_user.changed is false
+
+  - name: Check that configuration exists [1/2]
+    ansible.builtin.file:
+      path: /etc/pgbackrest/pgbackrest.conf
+      owner: postgres
+      group: postgres
+      state: file
+      mode: '0640'
+    register: __stat_configuration
+
+  - name: Check that configuration exists [2/2]
+    ansible.builtin.assert:
+      that:
+        - __stat_configuration.changed is false
+
+  - name: Check that the binary file exists [1/2]
+    ansible.builtin.file:
+      path: /usr/bin/pgbackrest
+      state: file
+    register: __stat_binary
+
+  - name: Check that the binary file exists [2/2]
+    ansible.builtin.assert:
+      that:
+        - __stat_binary.changed is false
+
+  - name: Verify Full backup cron exists [1/2]
+    ansible.builtin.cron:
+      name: Pgbackrest - Full backup
+      minute: 0
+      hour: 0
+      weekday: SUN
+      user: postgres
+      job: pgbackrest --type='full' --stanza=demo  backup
+    register: __stat_cron_full_backup
+
+  - name: Verify Full backup cron exists [2/2]
+    ansible.builtin.assert:
+      that:
+        - __stat_cron_full_backup.changed is false
+
+  - name: Verify Differential backup cron exists [1/2]
+    ansible.builtin.cron:
+      name: Pgbackrest - Incremental backup from standby
+      minute: 0
+      hour: 12
+      day: '*'
+      user: postgres
+      job: pgbackrest --type='diff' --stanza=demo --backup-standby=y backup
+    register: __stat_cron_diff_backup
+    diff: true
+
+  - name: Verify Differential backup cron exists [2/2]
+    ansible.builtin.assert:
+      that:
+        - __stat_cron_diff_backup.changed is false

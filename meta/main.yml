@@ -1,0 +1,33 @@
+galaxy_info:
+  author: Jean-Kevin KPADEY
+  namespace: mivek
+  description: This role installs and configures pgbackrest
+  role_name: pgbackrest
+
+  issue_tracker_url: https://github.com/mivek/ansible-role-pgbackrest/issues
+
+  license: BSD-3-Clause
+
+  min_ansible_version: '2.9'
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+        - focal
+        - jammy
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+        - bullseye
+
+  galaxy_tags:
+    - database
+    - postgresql
+    - postgres
+    - pgbackrest
+    - backup
+
+dependencies: []

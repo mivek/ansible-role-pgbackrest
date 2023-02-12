@@ -1,0 +1,19 @@
+---
+# tasks file for pgbackrest
+
+- name: Install pgbackrest from repository
+  ansible.builtin.import_tasks: repository.yml
+  when: pgbackrest_install_method == 'repository'
+
+- name: Install pgbackrest from source
+  ansible.builtin.import_tasks: source.yml
+  when: pgbackrest_install_method == 'source'
+
+- name: Create the users and configure ssh
+  ansible.builtin.import_tasks: users.yml
+
+- name: Configure pgbackrest
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Create cron
+  ansible.builtin.import_tasks: cron.yml

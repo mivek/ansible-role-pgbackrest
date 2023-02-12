@@ -1,0 +1,31 @@
+{{ ansible_managed | comment }}
+
+[global]
+{% for option_global in pgbackrest_configuration_global_options %}
+{{ option_global.name }}={{ option_global.value }}
+{% endfor %}
+
+{% for repository in pgbackrest_configuration_repositories %}
+{% set outer_loop = loop %}
+{% for option_repo in repository.options %}
+repo{{ outer_loop.index }}-{{ option_repo.name }}={{ option_repo.value }}
+{% endfor %}
+
+{% endfor %}
+
+[global:archive-push]
+{% for option_archive in pgbackrest_configuration_archive_push_options %}
+{{ option_archive.name }}={{ option_archive.value }}
+{% endfor %}
+
+
+{% for stanza in pgbackrest_configuration_stanzas %}
+[{{ stanza.name }}]
+{% for host in stanza.hosts %}
+{% set outer_loop = loop %}
+{% for options_stanza in host.options %}
+pg{{ outer_loop.index }}-{{ options_stanza.name }}={{ options_stanza.value }}
+{% endfor %}
+{% endfor %}
+
+{% endfor %}

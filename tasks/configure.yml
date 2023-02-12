@@ -1,0 +1,48 @@
+---
+
+- name: Create the pgbackrest directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_group }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  loop:
+    - { path: '/var/log/pgbackrest', mode: '0775' }
+    - { path: '/var/lib/pgbackrest', mode: '0750' }
+    - { path: '/etc/pgbackrest', mode: '0750' }
+
+- name: Template configuration
+  ansible.builtin.template:
+    dest: /etc/pgbackrest/pgbackrest.conf
+    src: pgbackrest.conf.j2
+    mode: '0640'
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_group }}"
+
+- name: Create the repositories directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_group }}"
+    mode: '0750'
+    state: directory
+  loop: "{{ pgbackrest_configuration_repositories | repositories_path }}"
+
+- name: Create the stanza
+  ansible.builtin.command:
+    cmd: "pgbackrest --stanza={{ item.name }} stanza-create"
+  become: true
+  become_user: '{{ pgbackrest_user }}'
+  loop: "{{ pgbackrest_configuration_stanzas }}"
+  when: pgbackrest_create_stanza
+  changed_when: false
+
+- name: Check the configuration
+  ansible.builtin.command:
+    cmd: "pgbackrest --stanza={{ item.name }} check"
+  become: true
+  become_user: "{{ pgbackrest_user }}"
+  loop: "{{ pgbackrest_configuration_stanzas }}"
+  when: pgbackrest_check_stanza
+  changed_when: false

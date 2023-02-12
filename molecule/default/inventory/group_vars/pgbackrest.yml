@@ -1,0 +1,74 @@
+---
+#---------------------------------
+# Geerlingguy.postgresql
+#---------------------------------
+
+postgresql_databases:
+  - name: example
+postgresql_users:
+  - name: jdoe
+
+postgresql_global_config_options:
+  - option: archive_command
+    value: 'pgbackrest --stanza=demo archive-push %p'
+  - option: archive_mode
+    value: 'on'
+  - option: max_wal_senders
+    value: '3'
+  - option: wal_level
+    value: 'replica'
+  - option: unix_socket_directories
+    value: '{{ postgresql_unix_socket_directories | join(",") }}'
+  - option: log_directory
+    value: 'log'
+postgresql_version: 15
+
+#---------------------------------
+# pgbackrest
+#---------------------------------
+
+pgbackrest_user: postgres
+pgbackrest_group: postgres
+
+pgbackrest_configuration_global_options: []
+  
+
+pgbackrest_configuration_stanzas:
+  - name: demo
+    hosts:
+      - options:
+        - name: path
+          value: '/var/lib/postgresql/{{ postgresql_version }}/main'
+
+pgbackrest_configuration_repositories:
+  - options:
+      - name: path
+        value: /var/lib/pgbackrest
+      - name: retention-full
+        value: 2
+      - name: cipher-pass
+        value: zWaf6XtpjIVZC5444yXB+cgFDFl7MxGlgkZSaoPvTGirhPygu4jOKOXf9LO4vjfO
+      - name: cipher-type
+        value: aes-256-cbc
+  - options:
+      - name: path
+        value: /var/lib/pgbackrest2
+
+pgbackrest_configuration_archive_push_options:
+  - name: compress-level
+    value: 3
+
+pgbackrest_backup_cron:
+  - stanza: demo
+    type: full
+    weekday: SUN
+    hour: 0
+    minute: 0
+    name: Full backup
+  - stanza: demo
+    type: diff
+    day: '*'
+    hour: 12
+    minute: 0
+    options: --backup-standby=y
+    name: Incremental backup from standby
