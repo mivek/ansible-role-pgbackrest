@@ -1,0 +1,22 @@
+---
+# vars file for pgbackrest
+
+__pgbackrest_repository: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+__pgbackrest_github_release_url: https://github.com/pgbackrest/pgbackrest/archive/release/{{ pgbackrest_version }}.tar.gz
+
+__pgbackrest_signing_key: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+__pgbackrest_source_install_dependencies:
+  - make
+  - gcc 
+  - libpq-dev 
+  - libssl-dev 
+  - libxml2-dev 
+  - pkg-config
+  - liblz4-dev
+  - libzstd-dev
+  - libbz2-dev
+  - libz-dev
+  - libyaml-dev
+
+__pgbackrest_user_ssh_dir: "{{ pgbackrest_user_home }}/.ssh"

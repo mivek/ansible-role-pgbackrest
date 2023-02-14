@@ -1,0 +1,48 @@
+---
+
+- name: Create the group "{{ pgbackrest_group }}"
+  ansible.builtin.group:
+    name: "{{ pgbackrest_group }}"
+    state: present
+
+- name: Create the user "{{ pgbackrest_user }}"
+  ansible.builtin.user:
+    name: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_group }}"
+    home: "{{ pgbackrest_user_home }}"
+    state: present
+    shell: /bin/bash
+
+- name: Create the ssh directory
+  ansible.builtin.file:
+    path: "{{ __pgbackrest_user_ssh_dir }}"
+    state: directory
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_group }}"
+    mode: "0750"
+  when: pgbackrest_user_private_key is defined and pgbackrest_user_private_key
+
+- name: Copy the private key
+  ansible.builtin.copy:
+    src: "{{ pgbackrest_user_private_key }}"
+    dest: "{{ __pgbackrest_user_ssh_dir }}"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_group }}"
+    mode: '0600'
+  when: pgbackrest_user_private_key is defined and pgbackrest_user_private_key
+
+- name: Name copy the authorized keys to the pgbackrest user
+  ansible.posix.authorized_key:
+    user: "{{ pgbackrest_user }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  loop: "{{ pgbackrest_user_authorized_keys }}"
+
+- name: Update ssh config
+  ansible.builtin.template:
+    src: config.j2
+    dest: "{{ __pgbackrest_user_ssh_dir }}/config"
+    owner: "{{ pgbackrest_user }}"
+    group: "{{ pgbackrest_group }}"
+    mode: '0640'
+  when: pgbackrest_user_authorized_keys | length

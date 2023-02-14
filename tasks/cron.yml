@@ -1,0 +1,42 @@
+---
+
+- name: Create backups cron
+  ansible.builtin.cron:
+    name: "Pgbackrest - {{ item.name }}"
+    minute: "{{ item.minute | default(omit) }}"
+    hour: "{{ item.hour | default(omit) }}"
+    day: "{{ item.day | default(omit) }}"
+    weekday: "{{ item.weekday | default(omit) }}"
+    month: "{{ item.month | default(omit) }}"
+    special_time: "{{ item.special_time | default(omit) }}"
+    user: "{{ pgbackrest_user }}"
+    job: "pgbackrest --type='{{ item.type }}' --stanza={{ item.stanza }} {{ item.options | default('') }} backup"
+  loop: "{{ pgbackrest_backup_cron }}"
+
+- name: Get list of scheduled tasks present on the host
+  ansible.builtin.shell: >-
+    set -o pipefail
+    | crontab -l -u {{ pgbackrest_user }}
+    | grep "Ansible: "
+    | awk -F'Ansible: ' '{print $2}'
+  register: __installed_tasks_name
+  changed_when: false
+
+- name: Get list of current scheduled tasks
+  ansible.builtin.set_fact:
+    __current_tasks: "{{ pgbackrest_backup_cron | map(attribute='name') | list }}"
+
+- name: Add prefix to the list
+  ansible.builtin.set_fact:
+    __prefixed_current_tasks: "{{ ['Pgbackrest - '] | product(__current_tasks) | map('join') | list }}"
+
+- name: Get names of obsolete scheduled tasks
+  ansible.builtin.set_fact:
+    __obsolete_tasks: "{{ __installed_tasks_name.stdout_lines | difference(__prefixed_current_tasks) | list }}"
+
+- name: Ensure obsolete tasks are removed from cron jobs
+  ansible.builtin.cron:
+    name: "{{ item }}"
+    state: absent
+    user: "{{ pgbackrest_user }}"
+  loop: "{{ __obsolete_tasks }}"

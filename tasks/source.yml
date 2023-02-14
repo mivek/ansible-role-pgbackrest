@@ -1,0 +1,29 @@
+---
+
+- name: Download the release
+  ansible.builtin.unarchive:
+    src: "{{ __pgbackrest_github_release_url }}"
+    remote_src: true
+    dest: /tmp
+  register: __pgbackrest_source_install_dir
+
+- name: Install dependencies for source build
+  ansible.builtin.apt:
+    name: "{{ __pgbackrest_source_install_dependencies }}"
+    update_cache: true
+
+- name: Configure and compile pgbackrest
+  ansible.builtin.command:
+    cmd: "{{ item }}"
+    chdir: "/tmp/pgbackrest-release-{{ pgbackrest_version }}/src"
+  loop:
+    - "./configure"
+    - "make"
+  changed_when: false
+
+- name: Copy the built artifact
+  ansible.builtin.copy:
+    src: "/tmp/pgbackrest-release-{{ pgbackrest_version }}/src/pgbackrest"
+    dest: /usr/bin
+    remote_src: true
+    mode: '0755'

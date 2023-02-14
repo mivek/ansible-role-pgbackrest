@@ -1,0 +1,25 @@
+---
+
+# defaults file for pgbackrest
+
+pgbackrest_version: 2.43
+
+pgbackrest_user: postgres
+pgbackrest_user_home: /var/lib/postgresql
+pgbackrest_group: postgres
+
+pgbackrest_install_method: repository # Choice: repository or source
+
+pgbackrest_configuration_global_options: []
+pgbackrest_configuration_archive_push_options: []
+
+pgbackrest_configuration_stanzas: []
+
+pgbackrest_configuration_repositories: []
+
+pgbackrest_create_stanza: true
+pgbackrest_check_stanza: true
+pgbackrest_backup_cron: []
+
+pgbackrest_user_private_key:
+pgbackrest_user_authorized_keys: []

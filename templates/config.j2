@@ -1,0 +1,22 @@
+{{ ansible_managed | comment }}
+
+{% for stanza in pgbackrest_configuration_stanzas %}
+{% for host in stanza.hosts %}
+{% for option in host.options %}
+{% if option.name == 'host' %}
+Host {{ option.value }}
+    StrictHostKeyChecking no
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% for repository in pgbackrest_configuration_repositories %}
+{% for option in repository.options %}
+{% if option.name == 'host' %}
+Host {{ option.value}}
+    StrictHostKeyChecking no
+{% endif %}
+{% endfor %}
+{% endfor %}

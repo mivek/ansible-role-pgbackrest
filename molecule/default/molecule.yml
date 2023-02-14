@@ -1,0 +1,36 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+  flake8
+platforms:
+  - name: instance1
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-debian11}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    privileged: True
+    pre_build_image: true
+    cgroupns_mode: host
+  - name: instance2
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-debian11}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    privileged: True
+    pre_build_image: true
+    cgroupns_mode: host
+provisioner:
+  name: ansible
+  inventory:
+    links:
+      hosts: inventory/host.yml
+      group_vars: inventory/group_vars/
+      host_vars: inventory/host_vars/
+verifier:
+  name: ansible
