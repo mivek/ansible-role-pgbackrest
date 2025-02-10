@@ -12,7 +12,7 @@ pgbackrest_install_method: repository # Choice: repository or source
 
 pgbackrest_configuration_global_options: []
 pgbackrest_configuration_archive_push_options: []
-
+pgbackrest_spool_directory:
 pgbackrest_configuration_stanzas: []
 
 pgbackrest_configuration_repositories: []
