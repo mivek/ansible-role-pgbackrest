@@ -11,11 +11,12 @@
       state: directory
       owner: postgres
       group: postgres
-      path: "{{ item }}"
+      path: "{{ item.path }}"
+      mode: "{{ item.mode }}"
     loop:
-      - /etc/pgbackrest
-      - /var/lib/pgbackrest
-      - /var/log/pgbackrest
+      - { path: '/etc/pgbackrest', mode: '0750' }
+      - { path: '/var/lib/pgbackrest', mode: '0750' }
+      - { path: '/var/log/pgbackrest', mode: '0775' }
     register: __stat_directories
 
   - name: Check that directories exists [2/2]
