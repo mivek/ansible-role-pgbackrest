@@ -1,4 +1,0 @@
----
-
-pgbackrest_install_method: source # Choice: repository or source
-pgbackrest_version: 2.43
