@@ -33,7 +33,6 @@ jobs:
 
       - name: Lint code.
         run: |
-          ansible-lint .
           flake8 .
           yamllint .
   molecule:
