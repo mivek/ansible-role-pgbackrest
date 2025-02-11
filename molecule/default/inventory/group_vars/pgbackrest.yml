@@ -30,7 +30,11 @@ postgresql_version: 15
 pgbackrest_user: postgres
 pgbackrest_group: postgres
 
-pgbackrest_configuration_global_options: []
+pgbackrest_configuration_global_options:
+  - name: archive-async
+    value: 'y'
+  - name: spool-path
+    value: /var/spool/pgbackrest
   
 
 pgbackrest_configuration_stanzas:
@@ -57,7 +61,9 @@ pgbackrest_configuration_repositories:
 pgbackrest_configuration_archive_push_options:
   - name: compress-level
     value: 3
-
+pgbackrest_configuration_archive_get_options:
+  - name: process-max
+    value: 2
 pgbackrest_backup_cron:
   - stanza: demo
     type: full
