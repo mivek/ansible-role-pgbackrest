@@ -30,7 +30,11 @@ postgresql_version: 15
 pgbackrest_user: postgres
 pgbackrest_group: postgres
 
-pgbackrest_configuration_global_options: []
+pgbackrest_configuration_global_options:
+  - name: archive-async
+    value: 'y'
+  - name: spool-path
+    value: /var/spool/pgbackrest
   
 
 pgbackrest_configuration_stanzas:

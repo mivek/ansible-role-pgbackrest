@@ -17,6 +17,7 @@
       - { path: '/etc/pgbackrest', mode: '0750' }
       - { path: '/var/lib/pgbackrest', mode: '0750' }
       - { path: '/var/log/pgbackrest', mode: '0775' }
+      - { path: '/var/spool/pgbackrest', mode: '0750' }
     register: __stat_directories
 
   - name: Check that directories exists [2/2]

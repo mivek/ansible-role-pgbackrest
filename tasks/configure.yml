@@ -31,12 +31,12 @@
 
 - name: Create the spool directory if needed
   ansible.builtin.file:
-    path: "{{ pgbackrest_spool_directory }}"
+    path: "{{ item }}"
     owner: "{{ pgbackrest_user }}"
     group: "{{ pgbackrest_group }}"
     mode: '0750'
     state: directory
-  when: pgbackrest_spool_directory is defined and pgbackrest_spool_directory
+  loop: "{{ pgbackrest_configuration_global_options | spool_path }}"
 
 - name: Create the stanza
   ansible.builtin.command:
