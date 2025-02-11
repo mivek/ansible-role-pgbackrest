@@ -36,6 +36,9 @@ List of global options to set. The structure is a list of objects with keys: `op
     pgbackrest_configuration_archive_push_options: []
 List of archive push options to set. The structure is a list of objects with keys: `option` and `value`.
 
+    pgbackrest_configuration_archive_get_options: []
+List of archive get options to set. The structure is a list of objects with keys: `option` and `value`.
+
     pgbackrest_configuration_stanzas: []
 List of stanzas. Each stanza has a name and a list of hosts. Each host has a list of options.
 
