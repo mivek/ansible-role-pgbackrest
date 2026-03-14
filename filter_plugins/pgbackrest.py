@@ -2,7 +2,8 @@
 
 def repositories_path(repositories_list):
     """
-    Returns a list of paths for local repositories (type is posix, cifs, or not set since posix is the default).
+    Returns a list of paths for local repositories (type is posix, cifs,
+    or not set since posix is the default).
     """
     local_types = {'posix', 'cifs'}
     return [repository['options']['path'] for repository in repositories_list
