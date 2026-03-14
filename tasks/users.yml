@@ -20,7 +20,7 @@
     owner: "{{ pgbackrest_user }}"
     group: "{{ pgbackrest_group }}"
     mode: "0750"
-  when: pgbackrest_user_private_key is defined and pgbackrest_user_private_key
+  when: pgbackrest_user_private_key is defined and pgbackrest_user_private_key | default('', true) | length > 0
 
 - name: Copy the private key
   ansible.builtin.copy:
@@ -29,7 +29,7 @@
     owner: "{{ pgbackrest_user }}"
     group: "{{ pgbackrest_group }}"
     mode: '0600'
-  when: pgbackrest_user_private_key is defined and pgbackrest_user_private_key
+  when: pgbackrest_user_private_key is defined and pgbackrest_user_private_key | default('', true) | length > 0
 
 - name: Name copy the authorized keys to the pgbackrest user
   ansible.posix.authorized_key:
@@ -45,4 +45,4 @@
     owner: "{{ pgbackrest_user }}"
     group: "{{ pgbackrest_group }}"
     mode: '0640'
-  when: pgbackrest_user_authorized_keys | length
+  when: pgbackrest_user_authorized_keys | length > 0

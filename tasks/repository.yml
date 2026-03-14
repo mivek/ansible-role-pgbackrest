@@ -1,9 +1,15 @@
 ---
 
+- name: Ensure postgresql signing key directory exists
+  ansible.builtin.file:
+    path: "{{ __pgbackrest_signing_key_dest | dirname }}"
+    state: directory
+    mode: '0755'
+
 - name: Add postgresql signing key
   ansible.builtin.get_url:
     url: "{{ __pgbackrest_signing_key }}"
-    dest: /etc/apt/trusted.gpg.d/pgbackrest.asc
+    dest: "{{ __pgbackrest_signing_key_dest }}"
     mode: '0644'
     force: true
 
