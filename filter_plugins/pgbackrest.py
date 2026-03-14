@@ -8,12 +8,11 @@ def repositories_path(repositories_list):
             in repository['options'] if option['name'] == 'path']
 
 
-def spool_path(options_list):
+def spool_path(options_map):
     """
-    Returns the spool path from the options list.
+    Returns the spool path from the options map.
     """
-    return [option['value'] for option
-            in options_list if option['name'] == 'spool-path']
+    return [options_map['spool-path']] if 'spool-path' in options_map else []
 
 
 class FilterModule(object):

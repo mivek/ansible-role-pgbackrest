@@ -30,20 +30,20 @@ Home directory of the user running pgbackrest
     pgbackrest_install_method: repository
 Installation method of `pgbackrest`. Either repository or `source`.
 
-    pgbackrest_configuration_global_options: []
-List of global options to set. The structure is a list of objects with keys: `option` and `value`.
+    pgbackrest_configuration_global_options: {}
+Map of global options to set. Keys are option names and values are option values.
 
-    pgbackrest_configuration_archive_push_options: []
-List of archive push options to set. The structure is a list of objects with keys: `option` and `value`.
+    pgbackrest_configuration_archive_push_options: {}
+Map of archive push options to set. Keys are option names and values are option values.
 
-    pgbackrest_configuration_archive_get_options: []
-List of archive get options to set. The structure is a list of objects with keys: `option` and `value`.
+    pgbackrest_configuration_archive_get_options: {}
+Map of archive get options to set. Keys are option names and values are option values.
 
     pgbackrest_configuration_stanzas: []
-List of stanzas. Each stanza has a name and a list of hosts. Each host has a list of options.
+List of stanzas. Each stanza has a name and a list of hosts. Each host has an `options` map where keys are option names and values are option values.
 
     pgbackrest_configuration_repositories: []
-List of repositories configuration. Each repository is a list of `options`. Option are composed of a `name` and a `value`.
+List of repositories configuration. Each repository has an `options` map where keys are option names and values are option values.
 
     pgbackrest_create_stanza: true
 Whether to run the command to create the stanza.
@@ -75,29 +75,22 @@ Including an example of how to use your role (for instance, with variables passe
       vars:
         pgbackrest_user: postgres
         pgbackrest_group: postgres
-        pgbackrest_configuration_global_options: []
+        pgbackrest_configuration_global_options: {}
         pgbackrest_configuration_stanzas:
         - name: demo
           hosts:
             - options:
-                - name: path
-                  value: '/var/lib/postgresql/{{ postgresql_version }}/main'
+                path: '/var/lib/postgresql/{{ postgresql_version }}/main'
         pgbackrest_configuration_repositories:
           - options:
-                - name: path
-                  value: /var/lib/pgbackrest
-                - name: retention-full
-                  value: 2
-                - name: cipher-pass
-                  value: zWaf6XtpjIVZC5444yXB+cgFDFl7MxGlgkZSaoPvTGirhPygu4jOKOXf9LO4vjfO
-                - name: cipher-type
-                  value: aes-256-cbc
+              path: /var/lib/pgbackrest
+              retention-full: 2
+              cipher-pass: zWaf6XtpjIVZC5444yXB+cgFDFl7MxGlgkZSaoPvTGirhPygu4jOKOXf9LO4vjfO
+              cipher-type: aes-256-cbc
           - options:
-              - name: path
-                value: /var/lib/pgbackrest2
+              path: /var/lib/pgbackrest2
         pgbackrest_configuration_archive_push_options:
-            - name: compress-level
-              value: 3
+          compress-level: 3
         pgbackrest_backup_cron:
             - stanza: demo
               type: full

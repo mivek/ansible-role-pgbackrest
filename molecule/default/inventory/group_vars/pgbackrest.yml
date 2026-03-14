@@ -31,39 +31,28 @@ pgbackrest_user: postgres
 pgbackrest_group: postgres
 
 pgbackrest_configuration_global_options:
-  - name: archive-async
-    value: 'y'
-  - name: spool-path
-    value: /var/spool/pgbackrest
-  
+  archive-async: 'y'
+  spool-path: /var/spool/pgbackrest
 
 pgbackrest_configuration_stanzas:
   - name: demo
     hosts:
       - options:
-        - name: path
-          value: '/var/lib/postgresql/{{ postgresql_version }}/main'
+          path: '/var/lib/postgresql/{{ postgresql_version }}/main'
 
 pgbackrest_configuration_repositories:
   - options:
-      - name: path
-        value: /var/lib/pgbackrest
-      - name: retention-full
-        value: 2
-      - name: cipher-pass
-        value: zWaf6XtpjIVZC5444yXB+cgFDFl7MxGlgkZSaoPvTGirhPygu4jOKOXf9LO4vjfO
-      - name: cipher-type
-        value: aes-256-cbc
+      path: /var/lib/pgbackrest
+      retention-full: 2
+      cipher-pass: zWaf6XtpjIVZC5444yXB+cgFDFl7MxGlgkZSaoPvTGirhPygu4jOKOXf9LO4vjfO
+      cipher-type: aes-256-cbc
   - options:
-      - name: path
-        value: /var/lib/pgbackrest2
+      path: /var/lib/pgbackrest2
 
 pgbackrest_configuration_archive_push_options:
-  - name: compress-level
-    value: 3
+  compress-level: 3
 pgbackrest_configuration_archive_get_options:
-  - name: process-max
-    value: 2
+  process-max: 2
 pgbackrest_backup_cron:
   - stanza: demo
     type: full

@@ -2,20 +2,16 @@
 
 {% for stanza in pgbackrest_configuration_stanzas %}
 {% for host in stanza.hosts %}
-{% for option in host.options %}
-{% if option.name == 'host' %}
-Host {{ option.value }}
+{% if 'host' in host.options %}
+Host {{ host.options['host'] }}
     StrictHostKeyChecking no
 {% endif %}
-{% endfor %}
 {% endfor %}
 {% endfor %}
 
 {% for repository in pgbackrest_configuration_repositories %}
-{% for option in repository.options %}
-{% if option.name == 'host' %}
-Host {{ option.value}}
+{% if 'host' in repository.options %}
+Host {{ repository.options['host'] }}
     StrictHostKeyChecking no
 {% endif %}
-{% endfor %}
 {% endfor %}
