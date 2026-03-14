@@ -2,10 +2,12 @@
 
 def repositories_path(repositories_list):
     """
-    Returns a list of paths in the options of repositories.
+    Returns a list of paths for local repositories (type is posix, cifs, or not set since posix is the default).
     """
-    return [option['value'] for repository in repositories_list for option
-            in repository['options'] if option['name'] == 'path']
+    local_types = {'posix', 'cifs'}
+    return [repository['options']['path'] for repository in repositories_list
+            if 'path' in repository['options']
+            and repository['options'].get('type', 'posix') in local_types]
 
 
 def spool_path(options_map):
