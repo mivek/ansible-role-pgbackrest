@@ -93,3 +93,15 @@
     ansible.builtin.assert:
       that:
         - __stat_cron_diff_backup.changed is false
+
+  - name: Verify compress packages are installed [1/2]
+    ansible.builtin.package_facts:
+      manager: apt
+
+  - name: Verify compress packages are installed [2/2]
+    ansible.builtin.assert:
+      that:
+        - "'bzip2' in ansible_facts.packages"
+        - "'gzip' in ansible_facts.packages"
+        - "'lz4' in ansible_facts.packages"
+        - "'zstd' in ansible_facts.packages"

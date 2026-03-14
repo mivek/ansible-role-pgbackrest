@@ -20,3 +20,9 @@ __pgbackrest_source_install_dependencies:
   - libyaml-dev
 
 __pgbackrest_user_ssh_dir: "{{ pgbackrest_user_home }}/.ssh"
+
+__pgbackrest_compress_packages:
+  - bzip2
+  - gzip
+  - lz4
+  - zstd

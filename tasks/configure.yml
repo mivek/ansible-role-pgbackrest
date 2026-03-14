@@ -1,5 +1,10 @@
 ---
 
+- name: Install compress packages
+  ansible.builtin.apt:
+    name: "{{ __pgbackrest_compress_packages }}"
+    state: present
+
 - name: Create the pgbackrest directories
   ansible.builtin.file:
     path: "{{ item.path }}"
