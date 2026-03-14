@@ -3,4 +3,4 @@
   hosts: all
   become: true
   roles:
-        - mivek.pgbackrest
+        - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
